@@ -5,10 +5,20 @@ import Types._
 
 class Game(board: TriangleMatrix)(implicit dim: Int) extends TriangleLike {
 
+  /** Retrieves a list of all possible games that could result
+    * from making a move in the current board state
+    *
+    * @return A list of Games
+    */
   def getNextBoards: List[Game] = {
     getAvailableMoves.map(makeMove)
   }
 
+  /** Retrieves a list of all valid moves that could be made
+    * from the current board state
+    *
+    * @return A list of Moves
+    */
   def getAvailableMoves: List[Move] = {
     board.emptySquares.flatMap { coord =>
       List(Move(coord, coord - Coordinate(2, 0)),
@@ -23,6 +33,13 @@ class Game(board: TriangleMatrix)(implicit dim: Int) extends TriangleLike {
     }.filter { case m: Move => isLegit(m) }
   }
 
+  /** Makes a move on the current board state
+    *
+    * @param move The move to be made
+    *
+    * @return A new Game with a state reflecting the move that was just made.
+    *         If the move is invalid, the current Game is returned
+    */
   def makeMove(move: Move): Game = {
     if (!isLegit(move)) {
       this
@@ -37,6 +54,13 @@ class Game(board: TriangleMatrix)(implicit dim: Int) extends TriangleLike {
     }
   }
 
+  /** Determines if a Move is legitimate or not
+    *
+    * @param move The move to test
+    *
+    * @return true if the move is legitimate,
+    *         false otherwise
+    */
   def isLegit(move: Move): Boolean = {
     val jumpedCoord = getJumped(move)
 
@@ -45,8 +69,6 @@ class Game(board: TriangleMatrix)(implicit dim: Int) extends TriangleLike {
     move.end.isLegit &&
     board.get(move.start) == Peg && board.get(jumpedCoord) == Peg && board.get(move.end) == Empty
   }
-
-  private def getJumped(move: Move): Coordinate = (move.start + move.end) / 2
 
   /** Finds a solution to the given Game
     *

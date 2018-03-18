@@ -4,6 +4,9 @@ import Types._
 
 object Triangle {
 
+  /** A trait defining a triangle-like object
+    *
+    */
   trait TriangleLike {
 
     def getAvailableMoves: List[Move]

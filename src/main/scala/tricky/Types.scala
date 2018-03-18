@@ -11,8 +11,13 @@ object Types {
     }
   }
 
-  case class Move(start: Coordinate, end: Coordinate)
+  case class Move(start: Coordinate, end: Coordinate) {
+    def getJumped: Coordinate = (start + end) / 2
+  }
 
+  /** Implicit class defining extended functionality for Coordinate objects
+    *
+    */
   implicit class RichCoordinate(coord: Coordinate) {
     def +(other: Coordinate): Coordinate = {
       Coordinate(coord.row + other.row, coord.col + other.col)
